@@ -30,6 +30,26 @@ rs_dir="$HOME/RuneScape"
 cache_dir="$rs_dir/Cache"	
 libs_dir="$rs_dir/Lib"
 settings_dir="$rs_dir/Settings"
+agree="   This is the Installer for RuneScape Private Server Launcher.
+   This tool is used to easily install needed software and a download
+   Clients as well as Run them. Have fun and no using this to create
+   evil and havoc on another users computer. Other than that go at it.
+   
+                      Do you Understand Whats Above?"
+file_agree="   The First Process of the installer is going to setup the necessary
+     files. A folder will be made in /home/<user>/ called RuneScape.
+        Inside will be all the Script Files, Folders, Cache, Etc
+        
+                     Do you understand whats above?"
+java_agree="        The Next Process of this installer is going to check
+    if you need Java, if needed it will install for you automatically.
+          This is needed for The clients since they are .jars.
+
+                    Would you like to install Java 8"
+download_agree="                 Three Shell Scripts need to be downloaded
+      These are in charge of Installing/Updating/Running the Clients
+                   Would you like to Download them?
+             These are required to make the Launcher Work"
 
 #Creates Launcher Icon on Desktop
 create_launcher() {
@@ -71,14 +91,11 @@ create_filepaths() {
 		echo "$settings_dir Created"
 		sleep 1
 		echo -e "\n"
-		echo "Three Shell Scripts need to be downloaded" 
-		echo "These are in charge of Installing/Updating/Running the Clients"
-		echo "Would you like to Download them?"
-		echo "These are required to make the Launcher Work"
-		echo -n "[Y/N]> "
-		read answer
-		if [[ "$answer" =~ y ]];
+		dialog --yesno "$download_agree" 8 90
+		answer=$?
+		if [ "$answer" == "0" ];
 		then
+			clear
 			wget --output-document="$rs_dir/rs.png" "https://transfer.sh/11c2LX/rs.png"
 			echo "Downloading Main.sh from https://transfer.sh/13uv9L/main.sh"
 			wget --output-document="$rs_dir/main.sh" "https://transfer.sh/13uv9L/main.sh"
@@ -108,6 +125,7 @@ create_filepaths() {
 			close_shell
 		fi
 		create_launcher
+		clear
 		echo -e "/n"
 		echo "File System has been Configured correctly. At anytime if you need to Reinstall this launcher."
 		echo "use ./installer.sh -reinstall"
@@ -126,44 +144,24 @@ install_java() {
 	status=$(dpkg -s oracle-java8-installer|grep installed)
 	if [ "" == "$status" ];
 	then
-		echo -e "Java 8 isn'''t installed"
-		echo -e "\n"
-		echo "+---------------------+"
-		echo "| Java 8 Installation |"
-		echo "+---------------------+"
-		echo -e "\n"
-		echo "Java 8 is needed to allow the Rsps Clients to run"
-		echo "this requires ppa:webupd8team/java to be added to"
-		echo "your PPA keychain to Java 8 can be downloaded and"
-		echo "installed."
-		echo -e "\n"
-		echo -n "Do you Understand [Y/N]> "
-		read response
-		if [[ "$response" =~ y ]];
-		then
-			echo "Adding ppa:webupd8team/java to PPA Keychain"
-			sudo add-apt-repository ppa:webupd8team/java
-			echo "ppa:webupd8team/java added to PPA Kaychain"
-			echo "Updating apt-get"
-			sudo apt-get update
-			printf
-			echo "apt-get updated"
-			echo "Installing Java 8"
-			sudo apt-get install oracle-java8-installer
-			echo "Java 8 Installed"
-			sleep 5
-		else
-			close_shell
-		fi
-	else
-		echo "Java 8 is already installed."
+		echo "Adding ppa:webupd8team/java to PPA Keychain"
+		sudo add-apt-repository ppa:webupd8team/java
+		echo "ppa:webupd8team/java added to PPA Kaychain"
+		echo "Updating apt-get"
+		sudo apt-get update
+		printf
+		echo "apt-get updated"
+		echo "Installing Java 8"
+		sudo apt-get install oracle-java8-installer
+		echo "Java 8 Installed"
 		sleep 5
+	else
+		close_shell
 	fi
 }
 
 #Renders Help to console
 help() {
-
 	local k=10
 	while [ "$k" != 0 ];
 	do
@@ -300,42 +298,24 @@ then
 else
 	while [ "$a" == 0 ]
 	do
-		clear
-		echo "     +--------------------------------------------------------------------+"
-		echo "     | Welcome to the RuneScape Private Server Client launcher for Linux. |"
-		echo "     | This software is under fair use. I dont care what you do with it,  |"
-		echo "     | unless its for dark/evil reasons (Which I highly doubt would be    |"
-		echo "     | the case), or charging for this software is free for everyone      |"
-		echo "     +--------------------------------------------------------------------+"
-		echo -e "\n"
-		echo "                [Do you agree to the agreement stated above?]"
-		echo -n "                [Y/N]> "
-		read eula
-		if [[ "$eula" =~ y ]];
+		#Renders Agreement Dialog Screen
+		dialog --yesno "$agree" 9 90
+		eula=$?
+		if [ "$eula" == "0" ];
 		then
-			clear
-			echo "     +--------------------------------------------------------------------+"
-			echo "     | The First Process of the installer is going to setup the necessary |"
-			echo "     | files. A folder will be made in /home/<user>/ called RuneScape.    |"
-			echo "     | Inside will be all the Script Files, Folders, Cache, Etc.          |"
-			echo "     +--------------------------------------------------------------------+"
-			echo -e "\n"
-			echo "                [Are you ok with these changes to your filesystem?]"
-			echo -n "                [Y/N]> "
-			read question
-			if [[ "$question" =~ y ]];
+			#Renders Filepath Creation Agreement Dialog Screen
+			dialog --yesno "$file_agree" 8 90
+			question=$?
+			if [ "$question" == "0" ];
 			then
 				create_filepaths
 			else
 				close_shell
 			fi
-			clear
-			echo "The Next Process of this installer is going to check if you need Java, if needed"
-			echo "it will install for you automatically. This is needed for The clients since they are .jars."
-			echo "would you like to install Java 8"
-			echo -n "[Y/N]> "
-			read real_answer
-			if [[ "$real_answer" =~ y ]];
+			#Renders Java Installation Agreement Dialg Screen
+			dialog --yesno "$java_agree" 8 120
+			real_answer=$?
+			if [ "$real_answer" == "0" ];
 			then
 				install_java
 			else
