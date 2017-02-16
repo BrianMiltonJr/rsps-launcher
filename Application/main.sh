@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Variables
+a=0
+rs_dir="$HOME/RuneScape"
+
 #Closes the Shell
 close_shell() {
 	clear
@@ -17,10 +21,6 @@ close_shell() {
 		fi
 	done
 }
-
-#Variables
-a=0
-rs_dir="$HOME/RuneScape"
 
 #Main Loop
 while [ "$a" == 0 ]

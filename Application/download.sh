@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #Variables
 a=0
 rs_dir="$HOME/RuneScape"
