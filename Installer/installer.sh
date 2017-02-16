@@ -31,6 +31,7 @@ cache_dir="$rs_dir/Cache"
 libs_dir="$rs_dir/Lib"
 settings_dir="$rs_dir/Settings"
 
+#Creates Launcher Icon on Desktop
 create_launcher() {
 	file="$HOME/Desktop/RSPS.desktop"
 	echo "[Desktop Entry]" > "$file"
@@ -49,6 +50,7 @@ create_launcher() {
 #Creates Software File System
 create_filepaths() {
 		clear
+		#Creates all the Different Directories Needed
 		echo "Creating $rs_dir"
 		mkdir -p "$rs_dir"
 		echo "$rs_dir Created"
@@ -159,6 +161,7 @@ install_java() {
 	fi
 }
 
+#Renders Help to console
 help() {
 
 	local k=10
@@ -191,6 +194,7 @@ close_shell() {
 	done
 }
 
+#Uninstalls only the Launcher
 uninstall_launcher() {
 	clear
 	echo "Using this option is going to rm -rf $rs_dir ."
@@ -207,6 +211,7 @@ uninstall_launcher() {
 	fi
 }
 
+#Uninstalls only Java 8
 uninstall_java() {
 	clear
 	echo "Are you sure you want to get ride of Java 8?"
@@ -225,6 +230,7 @@ uninstall_java() {
 	fi
 }
 
+#Renders Uninstall to Console
 uninstaller(){
 	clear
 	echo "You have Selected to Uninstall RSPS Launcher."
@@ -247,6 +253,7 @@ uninstaller(){
 	fi
 }
 
+#Renders Repair to Console
 repair() {
 	clear
 	echo "You are about to Reinstall RSPS Launcher"
@@ -271,6 +278,7 @@ repair() {
 	fi
 }
 
+#Starting Point
 if [ $# -gt 0 ];
 then
 	while [[ $# == 1 ]]

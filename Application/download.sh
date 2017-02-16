@@ -27,6 +27,7 @@ download_runescape_client() {
 	sleep 2
 }
 
+#Life Loop
 while [ "$a" == 0 ]
 do
 	clear
